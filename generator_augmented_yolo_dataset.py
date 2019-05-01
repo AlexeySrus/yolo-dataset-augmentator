@@ -74,13 +74,15 @@ def read_labels_as_boxes(labels_path, img_shape):
 def save_boxes(boxes_path, boxes, image_shape):
     with open(boxes_path, 'w') as f:
         for box in boxes:
-            box_line = str(box['box'][0] / image_shape[1]) + ' ' + \
-                       str(box['box'][1] / image_shape[0]) + ' ' + \
+            x0, y0 = box['box'][:2]
+            w, h = box['box'][2] - x0, box['box'][3] - y0
+            box_line = str((x0 + w // 2) / image_shape[1]) + ' ' + \
+                       str((y0 + h // 2) / image_shape[0]) + ' ' + \
                        str(
-                            (box['box'][2] - box['box'][0]) / image_shape[1]
+                            w / image_shape[1]
                        ) + ' ' + \
                        str(
-                            (box['box'][3] - box['box'][1]) / image_shape[0]
+                            h / image_shape[0]
                        )
 
             f.write('{} {}\n'.format(box['label'], box_line))
